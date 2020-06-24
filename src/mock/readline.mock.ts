@@ -9,7 +9,8 @@ export class ReadlineMock implements IReadlineModule {
       question: (query: string, callback: (answer: string) => void): void => {
         callback(this.answerResponse);
       },
-      close: (): void => { }
+      close: (): void => { } // tslint:disable-line: no-empty
+
     }
   }
 }
