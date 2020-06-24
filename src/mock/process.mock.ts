@@ -7,5 +7,8 @@ export class ProcessMock implements IProcessModule {
 
   public constructor(
     public readonly argv: string[] = [],
-  ) { }
+  ) {
+    this.stdin.destroy();
+    this.stdout.destroy();
+  }
 }

@@ -36,7 +36,7 @@ describe("CliService", () => {
     const output: string = "foobar";
     const commandName: string = "testcommand";
     // Create mock console for listening on console.log
-    const consoleMock = new ConsoleMock((data) => {
+    const consoleMock = new ConsoleMock((data: string) => {
       // Check that log output equals output string
       expect(data).equal(output);
     });
