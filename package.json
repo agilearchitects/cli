@@ -1,0 +1,38 @@
+{
+  "engines": {
+    "node": "~12.8.0"
+  },
+  "name": "@agilearchitects/cli",
+  "version": "0.0.1",
+  "main": "lib/index.js",
+  "author": "Agile Architects AB <contact@agilearchitects.se>",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "test": "mocha --recursive src/**/*.spec.ts --require ts-node/register --timeout 999999",
+    "lint": "tslint --config tslint.json --project tsconfig.json",
+    "prepublishOnly": "yarn test && yarn lint && yarn build"
+  },
+  "files": [
+    "/lib"
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint",
+      "pre-push": "yarn test || yarn lint"
+    }
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.11",
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^14.0.14",
+    "chai": "^4.2.0",
+    "husky": "^4.2.5",
+    "mocha": "^8.0.1",
+    "ts-node": "^8.10.2",
+    "tslint": "^6.1.2",
+    "typescript": "^3.9.5"
+  },
+  "dependencies": {}
+}
