@@ -8,7 +8,8 @@ export interface IReadlineModule {
 }
 
 export interface IConsoleModule {
-  log(message?: any, ...optionalParams: any[]): void;
+  log(message?: any): void;
+  table(tabularData: any): void;
 }
 
 export interface IProcessModule {
@@ -95,6 +96,10 @@ export class CliModule {
 
   public print(string: string): void {
     this.consoleModule.log(string);
+  }
+
+  public table(object: any): void {
+    this.consoleModule.table(object);
   }
 
   private getCommand(commandName: string): ICommand | undefined {
