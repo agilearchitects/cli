@@ -8,7 +8,7 @@ export interface IReadlineModule {
 }
 
 export interface IConsoleModule {
-  log(message?: any): void;
+  log(message?: any, ...optionalParams: any[]): void;
   table(tabularData: any, properties?: string[]): void;
 }
 
@@ -25,6 +25,32 @@ export interface ICommand {
   callback: commandCallback;
   info?: string;
   man?: string;
+}
+
+enum consoleColor {
+  RESET = "\x1b[0m",
+  BRIGHT = "\x1b[1m",
+  DIM = "\x1b[2m",
+  UNDERSCORE = "\x1b[4m",
+  B_LINK = "\x1b[5m",
+  REVERSE = "\x1b[7m",
+  HIDDEN = "\x1b[8m",
+  FG_BLACK = "\x1b[30m",
+  FG_RED = "\x1b[31m",
+  FG_GREEN = "\x1b[32m",
+  FG_YELLOW = "\x1b[33m",
+  FG_BLUE = "\x1b[34m",
+  FG_MAGENTA = "\x1b[35m",
+  FG_CYAN = "\x1b[36m",
+  FG_WHITE = "\x1b[37m",
+  BG_BLACK = "\x1b[40m",
+  BG_RED = "\x1b[41m",
+  BG_GREEN = "\x1b[42m",
+  BG_YELLOW = "\x1b[43m",
+  BG_BLUE = "\x1b[44m",
+  BG_MAGENTA = "\x1b[45m",
+  BG_CYAN = "\x1b[46m",
+  BG_WHITE = "\x1b[47m",
 }
 
 export class CliModule {
@@ -94,12 +120,19 @@ export class CliModule {
     });
   }
 
-  public print(string: string): void {
-    this.consoleModule.log(string);
+  public print(message: string): void {
+    this.consoleModule.log(message);
   }
 
   public table(object: any, properties?: string[]): void {
     this.consoleModule.table(object, properties);
+  }
+
+  public error(message: string): void {
+    this.consoleModule.log(consoleColor.FG_RED, message);
+  }
+  public success(message: string): void {
+    this.consoleModule.log(consoleColor.FG_CYAN, message);
   }
 
   private getCommand(commandName: string): ICommand | undefined {
