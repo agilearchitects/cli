@@ -67,14 +67,16 @@ describe("CliService", () => {
       "c=c", "c=d" // Overwriting
     ]);
     const cli = new CliModule(readline, processMock, console);
-    await cli.register("testcommand", (args: IArguments) => {
-      expect(args["a"]).equal("b");
-      expect(args["foo"]).equal("bar=hello");
-      expect(args["length"]).equal(12);
-      expect(args["test"]).equal(true);
-      expect(args["hello"]).equal(true);
-      expect(args["world"]).equal(false);
-      expect(args["c"]).equal("d");
+    await cli.register("testcommand", () => {
+      console.log(cli.argumentList)
+      expect(cli.argumentDictionary["a"]).equal("b");
+      expect(cli.argumentDictionary["foo"]).equal("bar=hello");
+      expect(cli.argumentDictionary["length"]).equal(12);
+      expect(cli.argumentDictionary["test"]).equal(true);
+      expect(cli.argumentDictionary["hello"]).equal(true);
+      expect(cli.argumentDictionary["world"]).equal(false);
+      expect(cli.argumentDictionary["c"]).equal("d");
+      expect(cli.argumentList).length(8);
     }).invoke();
   });
 });

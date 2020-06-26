@@ -19,7 +19,7 @@ export interface IProcessModule {
 }
 
 export type prompt = (question: string) => Promise<string>;
-export type commandCallback = (args: IArguments) => void | Promise<void>;
+export type commandCallback = () => void | Promise<void>;
 export interface ICommand {
   name: string;
   callback: commandCallback;
@@ -58,6 +58,9 @@ enum consoleColor {
 
 export class CliModule {
   private commands: ICommand[] = [];
+  private commandName: string | undefined;
+  private _argumentDictionary: IArguments = {};
+  private _argumentList: string[] = [];
 
   public constructor(
     private readonly readlineModule: IReadlineModule,
@@ -69,33 +72,16 @@ export class CliModule {
       consoleModule.log(`COMMAND${tabs}INFO\n${this.commands.map((command: ICommand) =>
         `${command.name}${command.info !== undefined ? `${tabs}${command.info}` : ""}`).join("\n")}`);
     }, "Print this text");
-  }
 
-  public register(commandName: string, callback: commandCallback, info?: string, man?: string): this {
-    if (this.getCommand(commandName) !== undefined) {
-      throw new Error(`Command "${commandName}" is already registered`);
-    }
-
-    this.addCommand(commandName, callback, info, man);
-
-    return this;
-  }
-
-  public async invoke(): Promise<void> {
     /* Parse out commands from process.argv. First two
     args are process name and file executed. These will
     be parsed out */
     const args: string[] = this.processModule.argv.slice(2);
 
-    // Will throw error if command is missing from args
-    if (args[0] === undefined) {
-      this.consoleModule.log("No command was specifed");
-      return;
-    }
-
-    // Get command
-    const command = this.getCommand(args[0]);
-    const argumentDictionary: IArguments = args.slice(1).reduce((previousValue: IArguments, currentValue: string) => {
+    // Register command arguments
+    this.commandName = args[0];
+    this._argumentList = args.slice(1);
+    this._argumentDictionary = args.slice(1).reduce((previousValue: IArguments, currentValue: string) => {
       let key: string = currentValue;
       let value: string | number | boolean = true;
       const match = currentValue.match(/^([^=]+)=(.*)$/);
@@ -116,14 +102,33 @@ export class CliModule {
         [key]: value,
       }
     }, {});
+  }
 
-    // Will throw error if command could not be found
+  public get argumentDictionary(): IArguments { return this._argumentDictionary; }
+  public get argumentList(): string[] { return this._argumentList; }
+
+  public register(commandName: string, callback: commandCallback, info?: string, man?: string): this {
+    if (this.getCommand(commandName) !== undefined) {
+      throw new Error(`Command "${commandName}" is already registered`);
+    }
+
+    this.addCommand(commandName, callback, info, man);
+
+    return this;
+  }
+
+  public async invoke(): Promise<void> {
+    if (this.commandName === undefined) {
+      this.print("No command was specifed");
+      return;
+    }
+    const command = this.getCommand(this.commandName);
     if (command === undefined) {
-      this.consoleModule.log(`Command "${args[0]}" could not be found`);
+      this.print(`Command "${this.commandName}" could not be found`);
       return;
     }
 
-    const execution: void | Promise<void> = command.callback(argumentDictionary);
+    const execution: void | Promise<void> = command.callback();
     if (execution instanceof Promise) {
       await execution;
     }
