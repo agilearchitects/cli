@@ -3,7 +3,7 @@
     "node": "~12.8.0"
   },
   "name": "@agilearchitects/cli",
-  "version": "0.0.5",
+  "version": "1.0.0",
   "main": "lib/index.js",
   "author": "Agile Architects AB <contact@agilearchitects.se>",
   "license": "MIT",
@@ -33,6 +33,5 @@
     "ts-node": "^8.10.2",
     "tslint": "^6.1.2",
     "typescript": "^3.9.5"
-  },
-  "dependencies": {}
+  }
 }
