@@ -19,12 +19,15 @@ export interface IProcessModule {
 }
 
 export type prompt = (question: string) => Promise<string>;
-export type commandCallback = (...args: string[]) => void | Promise<void>;
+export type commandCallback = (args: IArguments) => void | Promise<void>;
 export interface ICommand {
   name: string;
   callback: commandCallback;
   info?: string;
   man?: string;
+}
+export interface IArguments {
+  [key: string]: string | number | boolean;
 }
 
 enum consoleColor {
@@ -92,6 +95,27 @@ export class CliModule {
 
     // Get command
     const command = this.getCommand(args[0]);
+    const argumentDictionary: IArguments = args.slice(1).reduce((previousValue: IArguments, currentValue: string) => {
+      let key: string = currentValue;
+      let value: string | number | boolean = true;
+      const match = currentValue.match(/^([^=]+)=(.*)$/);
+      if (match !== null) {
+        key = match[1];
+        value = match[2];
+
+        if (value.toLowerCase() === "true") {
+          value = true;
+        } else if (value.toLowerCase() === "false") {
+          value = false;
+        } else if (value === parseInt(value, 10).toString()) {
+          value = parseInt(value, 10);
+        }
+      }
+      return {
+        ...previousValue,
+        [key]: value,
+      }
+    }, {});
 
     // Will throw error if command could not be found
     if (command === undefined) {
@@ -99,7 +123,7 @@ export class CliModule {
       return;
     }
 
-    const execution: void | Promise<void> = command.callback(...args.slice(1));
+    const execution: void | Promise<void> = command.callback(argumentDictionary);
     if (execution instanceof Promise) {
       await execution;
     }

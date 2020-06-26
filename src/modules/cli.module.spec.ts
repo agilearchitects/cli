@@ -4,13 +4,12 @@ import { describe, it } from "mocha";
 import * as readline from "readline";
 
 // Modules
-import { CliModule } from "./cli.module";
+import { CliModule, IArguments } from "./cli.module";
 
 // Mock
 import { ReadlineMock } from "../mock/readline.mock";
 import { ProcessMock } from "../mock/process.mock";
 import { ConsoleMock } from "../mock/console.mock";
-import { read } from "fs";
 
 describe("CliService", () => {
   it("Should be able create", () => {
@@ -56,5 +55,26 @@ describe("CliService", () => {
     // Call prompt
     const promtAnswer = await cli.prompt("");
     expect(promtAnswer).equal(answer);
+  });
+  it("Should be able to parse argument values", async () => {
+    const processMock = new ProcessMock(["", "", "testcommand",
+      "a=b", // String value
+      "foo=bar=hello", // String value with "=" sign
+      "length=12", // Numeric value
+      "test", // No value (parsed to true)
+      "hello=true", // Boolean value
+      "world=false", // Boolean value
+      "c=c", "c=d" // Overwriting
+    ]);
+    const cli = new CliModule(readline, processMock, console);
+    await cli.register("testcommand", (args: IArguments) => {
+      expect(args["a"]).equal("b");
+      expect(args["foo"]).equal("bar=hello");
+      expect(args["length"]).equal(12);
+      expect(args["test"]).equal(true);
+      expect(args["hello"]).equal(true);
+      expect(args["world"]).equal(false);
+      expect(args["c"]).equal("d");
+    }).invoke();
   });
 });
