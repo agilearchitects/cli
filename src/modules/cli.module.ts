@@ -158,10 +158,10 @@ export class CliModule {
   }
 
   public error(message: string): void {
-    this.consoleModule.log(consoleColor.FG_RED, message);
+    this.consoleModule.log(consoleColor.FG_RED, message, consoleColor.RESET);
   }
   public success(message: string): void {
-    this.consoleModule.log(consoleColor.FG_CYAN, message);
+    this.consoleModule.log(consoleColor.FG_CYAN, message, consoleColor.RESET);
   }
 
   private getCommand(commandName: string): ICommand | undefined {
