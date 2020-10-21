@@ -68,7 +68,6 @@ describe("CliService", () => {
     ]);
     const cli = new CliModule(readline, processMock, console);
     await cli.register("testcommand", () => {
-      console.log(cli.argumentList)
       expect(cli.argumentDictionary["a"]).equal("b");
       expect(cli.argumentDictionary["foo"]).equal("bar=hello");
       expect(cli.argumentDictionary["length"]).equal(12);
