@@ -1,6 +1,6 @@
 {
   "engines": {
-    "node": "~14.13.0"
+    "node": "^14.13.0"
   },
   "name": "@agilearchitects/cli",
   "version": "3.0.0",
