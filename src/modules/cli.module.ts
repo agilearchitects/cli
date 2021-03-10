@@ -157,11 +157,21 @@ export class CliModule {
     this.consoleModule.table(object, properties);
   }
 
-  public error(message: string): void {
-    this.consoleModule.log(consoleColor.FG_RED, message, consoleColor.RESET);
+  public info(message: string): void {
+  this.consoleModule.log(this.colorMessage(message, consoleColor.FG_CYAN));
   }
   public success(message: string): void {
-    this.consoleModule.log(consoleColor.FG_CYAN, message, consoleColor.RESET);
+    this.consoleModule.log(this.colorMessage(message, consoleColor.FG_GREEN));
+  }
+  public warning(message: string): void {
+    this.consoleModule.log(this.colorMessage(message, consoleColor.FG_YELLOW));
+  }
+  public error(message: string): void {
+    this.consoleModule.log(this.colorMessage(message, consoleColor.FG_RED));
+  }
+
+  private colorMessage(message: string, color: consoleColor = consoleColor.FG_WHITE) {
+    return `${color}${message}${consoleColor.RESET}`;
   }
 
   private getCommand(commandName: string): ICommand | undefined {
