@@ -1,7 +1,4 @@
 {
-  "engines": {
-    "node": "^14.13.0"
-  },
   "name": "@agilearchitects/cli",
   "version": "3.1.0",
   "main": "lib/index.js",
