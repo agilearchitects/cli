@@ -1,10 +1,9 @@
 // Libs
-import { expect } from "chai";
-import { describe, it } from "mocha";
+import { describe, expect, it } from "@jest/globals";
 import * as readline from "readline";
 
 // Modules
-import { CliModule, IArguments } from "./cli.module";
+import { CliModule } from "./cli.module";
 
 // Mock
 import { ReadlineMock } from "../mock/readline.mock";
@@ -14,7 +13,7 @@ import { ConsoleMock } from "../mock/console.mock";
 describe("CliService", () => {
   it("Should be able create", () => {
     const cli = new CliModule(readline, process, console);
-    expect(cli).instanceOf(CliModule);
+    expect(cli).toBeInstanceOf(CliModule);
   });
   it("Should be able to register command", () => {
     const cli = new CliModule(readline, process, console);
@@ -25,7 +24,7 @@ describe("CliService", () => {
     // Create mock console for listening on console.log
     const consoleMock = new ConsoleMock((data) => {
       // Make sure anything logged to console is not undefined
-      expect(data).not.undefined;
+      expect(data).not.toBeUndefined();
     });
     const cli = new CliModule(readline, process, consoleMock);
     await cli.invoke();
@@ -37,7 +36,7 @@ describe("CliService", () => {
     // Create mock console for listening on console.log
     const consoleMock = new ConsoleMock((data: string) => {
       // Check that log output equals output string
-      expect(data).equal(output);
+      expect(data).toEqual(output);
     });
     // Create mock process invoking testcommand
     const processMock = new ProcessMock(["", "", commandName]);
@@ -54,7 +53,7 @@ describe("CliService", () => {
     const cli = new CliModule(readlineMock, process, console);
     // Call prompt
     const promtAnswer = await cli.prompt("");
-    expect(promtAnswer).equal(answer);
+    expect(promtAnswer).toEqual(answer);
   });
   it("Should be able to parse argument values", async () => {
     const processMock = new ProcessMock(["", "", "testcommand",
@@ -68,14 +67,14 @@ describe("CliService", () => {
     ]);
     const cli = new CliModule(readline, processMock, console);
     await cli.register("testcommand", () => {
-      expect(cli.argumentDictionary["a"]).equal("b");
-      expect(cli.argumentDictionary["foo"]).equal("bar=hello");
-      expect(cli.argumentDictionary["length"]).equal(12);
-      expect(cli.argumentDictionary["test"]).equal(true);
-      expect(cli.argumentDictionary["hello"]).equal(true);
-      expect(cli.argumentDictionary["world"]).equal(false);
-      expect(cli.argumentDictionary["c"]).equal("d");
-      expect(cli.argumentList).length(8);
+      expect(cli.argumentDictionary["a"]).toEqual("b");
+      expect(cli.argumentDictionary["foo"]).toEqual("bar=hello");
+      expect(cli.argumentDictionary["length"]).toEqual(12);
+      expect(cli.argumentDictionary["test"]).toEqual(true);
+      expect(cli.argumentDictionary["hello"]).toEqual(true);
+      expect(cli.argumentDictionary["world"]).toEqual(false);
+      expect(cli.argumentDictionary["c"]).toEqual("d");
+      expect(cli.argumentList).toHaveLength(8);
     }).invoke();
   });
 });
