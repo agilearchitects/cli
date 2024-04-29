@@ -158,7 +158,7 @@ export class CliModule {
   }
 
   public info(message: string): void {
-  this.consoleModule.log(this.colorMessage(message, consoleColor.FG_CYAN));
+    this.consoleModule.log(this.colorMessage(message, consoleColor.FG_CYAN));
   }
   public success(message: string): void {
     this.consoleModule.log(this.colorMessage(message, consoleColor.FG_GREEN));
