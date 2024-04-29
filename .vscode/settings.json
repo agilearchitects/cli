@@ -1,4 +1,13 @@
 {
+  "eslint.enable": true,
+  "eslint.run": "onSave",
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "editor.formatOnSave": true
+  },
   "launch": {
     "version": "0.2.0",
     "configurations": [
