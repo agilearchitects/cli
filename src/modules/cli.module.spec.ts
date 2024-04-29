@@ -55,6 +55,16 @@ describe("CliService", () => {
     const promtAnswer = await cli.prompt("");
     expect(promtAnswer).toEqual(answer);
   });
+
+  it("Should be able to parse arguments", async () => {
+    const processMock = new ProcessMock(["", "", "testcommand", "a", "b"]);
+    const cli = new CliModule(readline, processMock, console);
+    await cli.register("testcommand", (a: string, b: string) => {
+      expect(cli.argumentList).toEqual(["a", "b"]);
+      expect(cli.argumentList).toHaveLength(2);
+    }).invoke();
+  });
+
   it("Should be able to parse argument values", async () => {
     const processMock = new ProcessMock(["", "", "testcommand",
       "a=b", // String value

@@ -19,7 +19,7 @@ export interface IProcessModule {
 }
 
 export type prompt = (question: string) => Promise<string>;
-export type commandCallback = () => void | Promise<void>;
+export type commandCallback = (...args: string[]) => void | Promise<void>;
 export interface ICommand {
   name: string;
   callback: commandCallback;
@@ -128,7 +128,7 @@ export class CliModule {
       return;
     }
 
-    const execution: void | Promise<void> = command.callback();
+    const execution: void | Promise<void> = command.callback(...this.argumentList);
     if (execution instanceof Promise) {
       await execution;
     }
